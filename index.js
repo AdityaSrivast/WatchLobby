@@ -13,21 +13,32 @@ app.get('/',function(req,res){
     res.render('index');
 })
 
-var host=0;
+var host=[];
 io.on('connection',function(client){
     console.log('CONNECTED')
-    if(host===0){
-        host=client.id;
+    if(host.length==0){
+        host.push(client.id);
     }
     else{
+        host.push(client.id)
         client.to(host).emit('get',{});
     }
     console.log(host);
+    client.on('wait',function(data){
+        client.broadcast.emit('wait',data)
+    });
     client.on('get',function(data){
         console.log('HOST'+host)
-        client.to(host).emit('get',data);
+        client.to(host[0]).emit('get',data);
     });
-
+    client.on('newvideo',function(data){
+        console.log(host)
+        if(client.id==host[0]){
+            client.emit('newvideo',data);
+        } else{
+            client.emit('errormessage',data);
+        }
+    })
     client.on('change', function(data){
         client.broadcast.emit('change',data);
     });
@@ -36,11 +47,11 @@ io.on('connection',function(client){
         client.broadcast.emit('sync',data)
     })        
     client.on('disconnect', function(){
-        if(client.id==host){
-            host=0;
-        }
+        host.splice(host.indexOf(client.id),1);
         console.log('DICONNECTED')
     });
 })
-
-server.listen(3000)
+var port=process.env.PORT || 4040;
+server.listen(port,function(){
+    console.log('running')
+});
