@@ -22,6 +22,7 @@ io.on('connection',function(client){
     else{
         client.to(host).emit('get',{});
     }
+    console.log(host);
     client.on('get',function(data){
         client.broadcast.emit('get',data)
     });

@@ -51,24 +51,21 @@
           done = true;
         }
       }
-      socket.on('text',function(message){
-          document.getElementById('l').innerHTML=message;
-              })
       socket.on('change',function(data){
+          console.log('change')
+          console.log(data);
           if(data.id!=socket.io.engine.id){
-            player.seekTo(data.pos);
             if(data.type===1){
+                player.seekTo(data.pos);
                 player.playVideo();
             } else if(data.type==2){
-                player.pauseVideo();
-            } else if(data.type==3){
-                player.pauseVideo();
-            }     
+                player.seekTo(data.pos);
+                player.pauseVideo();     
+            } else if(data.type===3){
+                player.playVideo();
             }
+        }
       })
-      document.getElementById('progress-bar').addEventListener('mouseup touchend', function (e) {
-          console.log('WORKS')
-    })
       function stopVideo() {
         player.stopVideo();
       }
