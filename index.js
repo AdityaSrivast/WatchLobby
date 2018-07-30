@@ -24,18 +24,17 @@ io.on('connection',function(client){
     }
     console.log(host);
     client.on('get',function(data){
-        client.broadcast.emit('get',data)
+        console.log('HOST'+host)
+        client.to(host).emit('get',data);
     });
 
-    client.on('text',function(data){
-        console.log('data');
-        client.broadcast.emit('text',data);
-    });
-    
     client.on('change', function(data){
         client.broadcast.emit('change',data);
     });
-            
+    client.on('sync',function(data){
+        console.log(data)
+        client.broadcast.emit('sync',data)
+    })        
     client.on('disconnect', function(){
         if(client.id==host){
             host=0;

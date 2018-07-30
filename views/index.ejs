@@ -9,69 +9,87 @@
 </head>
 <body>
     <div id="player"></div>
-    <form id='d'>
-        <input id='e' type="text">
-        <input type="submit">
-    </form>
-    <div id='l'></div>
+    <button id="play">Play</button>
+    <button id="pause">Pause</button>
+    <button id="sync">Sync</button>
 
 <script>
-   var tag = document.createElement('script');
-   const socket = io('http://localhost:3000');
-   tag.src = "https://www.youtube.com/iframe_api";
-   var firstScriptTag = document.getElementsByTagName('script')[0];
-   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    document.getElementById('d').addEventListener('submit',function(e){
-        e.preventDefault();
-        socket.emit('text',document.getElementById('e').value)
-    })
-   var player;
-      function onYouTubeIframeAPIReady() {
-          console.log(12);
+    var tag = document.createElement('script');
+    const socket = io('http://localhost:3000');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var player;
+    function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-          height: '390',
-          width: '640',
-          videoId: 'M7lc1UVf-VE',
-          events: {
-            'onStateChange': onPlayerStateChange
-          }
-        });
-      }
-      var done = false;
-      var date=new Date();
-      function onPlayerStateChange(event) {
-          socket.emit('change',{
-              timestamp:date.getTime(),
-              type:event.data,
-              pos:player.getCurrentTime(),  
-              id:socket.io.engine.id
-          })
-        if (event.data == YT.PlayerState.PLAYING && !done) {
-          setTimeout(stopVideo, 6000);
-          done = true;
-        }
-      }
-      socket.on('change',function(data){
-          console.log('change')
-          console.log(data);
-          if(data.id!=socket.io.engine.id){
-            if(data.type===1){
-                player.seekTo(data.pos);
-                player.playVideo();
-            } else if(data.type==2){
-                player.seekTo(data.pos);
-                player.pauseVideo();     
-            } else if(data.type===3){
-                player.playVideo();
+            height: '390',
+            width: '640',
+            videoId: 'M7lc1UVf-VE',
+            events: {
+                'onStateChange': onPlayerStateChange
             }
+        });
+    }
+    var done = false;
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+            setTimeout(stopVideo, 6000);
+            done = true;
         }
-      })
-      function stopVideo() {
+    }
+    document.getElementById('play').addEventListener('click',function(){
+        player.playVideo();
+        socket.emit('change',{
+            type:1,
+            pos:player.getCurrentTime(),  
+            id:socket.io.engine.id
+        })
+    })
+    document.getElementById('pause').addEventListener('click',function(){
+        player.pauseVideo();
+        socket.emit('change',{
+            type:2,
+            pos:player.getCurrentTime(),  
+            id:socket.io.engine.id
+        })
+    })
+    document.getElementById('sync').addEventListener('click',function(){
+        socket.emit('get',{
+            id:socket.io.engine.id
+        })
+    });
+    socket.on('change',function(data){
+        console.log(data);
+        if(data.type===1){
+            player.seekTo(data.pos);
+            player.playVideo();
+        } else if(data.type==2){
+            player.seekTo(data.pos);
+            player.pauseVideo();     
+        } else if(data.type===3){
+             
+        }
+    })
+    socket.on('get',function(data){
+        if(data.id!=socket.io.engine.id){
+            socket.emit('sync',{
+                pos:player.getCurrentTime(),
+                state:player.getPlayerState(),
+                id:socket.io.engine.id,
+            });
+        }
+    });
+    socket.on('sync',function(data){
+        player.seekTo(data.pos);
+        if(data.state==1){
+            player.playVideo();
+        } else if(data.state==2){
+            player.pauseVideo();
+        }  
+    });
+    function stopVideo() {
         player.stopVideo();
-      }
-
-    
-
+    }
 </script>
 
 </body>
