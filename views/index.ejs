@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div id="player"></div>
+    <form id='d'>
+        <input id='e' type="text">
+        <input type="submit">
+    </form>
+    <div id='l'></div>
+
+<script>
+   var tag = document.createElement('script');
+   const socket = io('http://localhost:3000');
+   tag.src = "https://www.youtube.com/iframe_api";
+   var firstScriptTag = document.getElementsByTagName('script')[0];
+   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    document.getElementById('d').addEventListener('submit',function(e){
+        e.preventDefault();
+        socket.emit('text',document.getElementById('e').value)
+    })
+   var player;
+      function onYouTubeIframeAPIReady() {
+          console.log(12);
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: 'M7lc1UVf-VE',
+          events: {
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+      var done = false;
+      var date=new Date();
+      function onPlayerStateChange(event) {
+          socket.emit('change',{
+              timestamp:date.getTime(),
+              type:event.data,
+              pos:player.getCurrentTime(),  
+              id:socket.io.engine.id
+          })
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          setTimeout(stopVideo, 6000);
+          done = true;
+        }
+      }
+      socket.on('text',function(message){
+          document.getElementById('l').innerHTML=message;
+              })
+      socket.on('change',function(data){
+          if(data.id!=socket.io.engine.id){
+              console.log(date.getTime()-data.timestamp);
+              player.seekTo(data.pos);
+            if(data.type===1){
+                player.playVideo();
+            } else if(data.type==2){
+                player.pauseVideo();
+            }      
+            }
+      })
+      document.getElementById('progress-bar').addEventListener('mouseup touchend', function (e) {
+          console.log('WORKS')
+    })
+      function stopVideo() {
+        player.stopVideo();
+      }
+
+    
+
+</script>
+
+</body>
+</html>
