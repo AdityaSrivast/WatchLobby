@@ -33,12 +33,8 @@ io.on('connection',function(client){
     });
     client.on('newvideo',function(data){
         console.log(host)
-        if(client.id==host[0]){
-            console.log(1);
-            client.emit('newvideo',data);
-        } else{
-            client.emit('errormessage',data);
-        }
+        console.log(1);
+        client.emit('newvideo2',data);    
     })
     client.on('change', function(data){
         client.broadcast.emit('change',data);

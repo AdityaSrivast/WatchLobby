@@ -44,8 +44,8 @@
             id:socket.io.engine.id
         })
     });
-    socket.on('newvideo',function(data){
-        console.log('Error in back')
+    socket.on('newvideo2',function(data){
+        console.log('Changing')
         player.loadVideoById({videoId:data.video});
     });
     var done = false;
