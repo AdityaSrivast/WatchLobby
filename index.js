@@ -26,8 +26,9 @@ io.on('connection',function(client){
         io.emit('host',{id:host[0]})
     }
     console.log(host);
-    client.on('wait',function(data){
-        io.emit('wait',data)
+    client.on('time',function(data){
+        console.log(data);
+        io.emit('time',data);
     });
     client.on('get',function(data){
         console.log('HOST'+host)
@@ -58,7 +59,7 @@ io.on('connection',function(client){
         console.log('DICONNECTED')
     });
 })
-var port=process.env.PORT || 4040;
+var port=process.env.PORT || 3000;
 server.listen(port,function(){
     console.log('running')
 });
