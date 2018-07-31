@@ -27,7 +27,7 @@ io.on('connection',function(client){
     }
     console.log(host);
     client.on('wait',function(data){
-        client.broadcast.emit('wait',data)
+        io.emit('wait',data)
     });
     client.on('get',function(data){
         console.log('HOST'+host)
@@ -44,11 +44,11 @@ io.on('connection',function(client){
         }
     })
     client.on('change', function(data){
-        client.broadcast.emit('change',data);
+        io.emit('change',data);
     });
     client.on('sync',function(data){
         console.log(data)
-        client.broadcast.emit('sync',data)
+        io.emit('sync',data)
     }) 
     client.on('mute',function(data){
         io.emit('mute',data)

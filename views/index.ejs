@@ -19,7 +19,7 @@
     <button id="mute">Mute</button>
 <script>
     var tag = document.createElement('script');
-    const socket = io('http://localhost:4040/');
+    const socket = io('https://obscure-lake-76319.herokuapp.com/');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -63,7 +63,6 @@
         }
     }
     document.getElementById('play').addEventListener('click',function(){
-        player.playVideo();
         socket.emit('change',{
             type:1,
             pos:player.getCurrentTime(),  
@@ -83,7 +82,6 @@
         }
     })
     document.getElementById('pause').addEventListener('click',function(){
-        player.pauseVideo();
         socket.emit('change',{
             type:2,
             pos:player.getCurrentTime(),  
