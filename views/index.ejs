@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>Youtube Synchro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/socket.io/socket.io.js"></script>
     <style type="text/css">
@@ -12,9 +12,9 @@
         /*background-image: url('images/bg-img.jpeg');
         background-position: center top;
         background-repeat: repeat;*/
-         background: #333333;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #dd1818, #333333);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #dd1818, #333333); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background: #333333;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to left, #dd1818, #333333);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to left, #dd1818, #333333); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
       }
       #player-container {
@@ -30,6 +30,7 @@ background: linear-gradient(to left, #dd1818, #333333); /* W3C, IE 10+/ Edge, Fi
       #btn-container{
         display: flex;
         justify-content: center;
+        flex-wrap: wrap;
       }
       #play,#pause,#sync,#mute {
         padding: 1rem;
@@ -62,7 +63,7 @@ background: linear-gradient(to left, #dd1818, #333333); /* W3C, IE 10+/ Edge, Fi
       }
       #form {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         justify-content: center;
       }
       #time{
@@ -80,6 +81,40 @@ background: linear-gradient(to left, #dd1818, #333333); /* W3C, IE 10+/ Edge, Fi
         color: #eee;
         text-align: center;
       }
+      .trackbar-container {
+        display: flex;
+        justify-content: center;
+
+      }
+
+      .slider {
+          -webkit-appearance: none;
+          width: 50%;
+          height: 25px;
+          /*background: #000;*/
+          /*color: #000;*/
+          /*background-color: #000;*/
+          outline: none;
+          opacity: 0.7;
+          -webkit-transition: .2s;
+          transition: opacity .2s;
+      }
+
+      .slider:hover {
+          opacity: 1;
+      }
+
+      .slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          background: #000;
+          cursor: pointer;
+      }
+
+      .slider::-moz-range-thumb {
+          background: #ff0000;
+          cursor: pointer;
+      }
     </style>
 </head>
 <body>
@@ -92,6 +127,9 @@ background: linear-gradient(to left, #dd1818, #333333); /* W3C, IE 10+/ Edge, Fi
   </nav>
   <div id="player-container">
     <div id="player"></div>
+  </div><br>
+  <div class="trackbar-container">
+    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
   </div>
   <form id='time'>
       <input type="text" placeholder="Enter Time" id="timenew">
