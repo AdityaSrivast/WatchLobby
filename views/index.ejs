@@ -6,23 +6,104 @@
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/socket.io/socket.io.js"></script>
+    <style type="text/css">
+      body{
+        /*background-color: #000;*/
+        /*background-image: url('images/bg-img.jpeg');
+        background-position: center top;
+        background-repeat: repeat;*/
+         background: #333333;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #dd1818, #333333);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #dd1818, #333333); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+      }
+      #player-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+      }
+      #player{
+        /*margin-top: 20px;*/
+        /*border: 1px solid rgb(255,20,20);*/
+      }
+      #btn-container{
+        display: flex;
+        justify-content: center;
+      }
+      #play,#pause,#sync,#mute {
+        padding: 1rem;
+        background-color: #333;
+        border: 1px solid #333;
+        color: #fff;
+        margin: 10px;
+      }
+      #play:hover,#pause:hover,#sync:hover,#mute:hover{
+        background-color: rgb(255,20,20);
+        border: 1px solid rgb(255,20,20);
+        cursor: pointer;
+      }
+      #video,#timenew{
+        padding: .5rem;
+        border: 1px solid #555;
+        background-color: #000;
+        color: #fff;
+      }
+      #btn-vid,#btn-time{
+        padding: 3px;
+        border: 2px solid #333;
+        background-color: #333;
+        color: #fff;
+      }
+      #btn-vid:hover,#btn-time:hover{
+        background-color: rgb(255,20,20);
+        border: 2px solid rgb(255,20,20);
+        cursor: pointer; 
+      }
+      #form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      #time{
+        display: flex;
+        justify-content: center;
+        margin: 20px;
+      }
+      #nav-bar {
+        background: #333333;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to left, #dd1818, #333333);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to left, #dd1818, #333333); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ 
+        padding: 1rem;
+      }
+      h4{
+        color: #eee;
+        text-align: center;
+      }
+    </style>
 </head>
 <body>
+  <nav id="nav-bar">
+    <h4 style="color: #fff;text-align: center;">YouTube Synchro</h4>
+    <form id='form'>
+      <input placeholder="Enter Video Id" id="video">
+      <button type="submit" id="btn-vid">Submit</button>
+    </form>
+  </nav>
+  <div id="player-container">
     <div id="player"></div>
+  </div>
+  <form id='time'>
+      <input type="text" placeholder="Enter Time" id="timenew">
+      <button type="submit" id="btn-time">Submit</button>
+  </form>
+  <div id="btn-container">
     <button id="play">Play</button>
     <button id="pause">Pause</button>
-    <button id="sync">Sync</button>
-    <form id='form'>
-        <input placeholder="Video Id" id="video">
-        <input type="submit">
-    </form>
     <button id="mute">Mute</button>
-    <div id="dt"></div>
-    <form id='time'>
-        <input placeholder="Time" id="timenew">
-        <input type="submit">
-    </form>
-    
+    <button id="sync">Sync</button>
+  </div>
+  <div id="dt"></div>
 <script>
     var tag = document.createElement('script');
     const socket = io('https://obscure-lake-76319.herokuapp.com//');
