@@ -18,12 +18,12 @@ io.on('connection',function(client){
     console.log('CONNECTED')
     if(host.length==0){
         host.push(client.id);
-        client.emit('host',{id:host[0]})
+        io.emit('host',{id:host[0]})
     }
     else{
         host.push(client.id)
         client.to(host).emit('get',{});
-        client.emit('host',{id:host[0]})
+        io.emit('host',{id:host[0]})
     }
     console.log(host);
     client.on('wait',function(data){
@@ -35,8 +35,13 @@ io.on('connection',function(client){
     });
     client.on('newvideo',function(data){
         console.log(host)
-        console.log(1);
-        client.emit('newvideo2',data);    
+        if(data.id==host[0]){
+            console.log(1);
+            io.emit('newvideo2',data);    
+        }
+        else{
+            client.emit('errormessage',data)
+        }
     })
     client.on('change', function(data){
         client.broadcast.emit('change',data);
@@ -44,7 +49,10 @@ io.on('connection',function(client){
     client.on('sync',function(data){
         console.log(data)
         client.broadcast.emit('sync',data)
-    })        
+    }) 
+    client.on('mute',function(data){
+        io.emit('mute',data)
+    })       
     client.on('disconnect', function(){
         host.splice(host.indexOf(client.id),1);
         console.log('DICONNECTED')
