@@ -18,10 +18,12 @@ io.on('connection',function(client){
     console.log('CONNECTED')
     if(host.length==0){
         host.push(client.id);
+        client.emit('host',{id:host[0]})
     }
     else{
         host.push(client.id)
         client.to(host).emit('get',{});
+        client.emit('host',{id:host[0]})
     }
     console.log(host);
     client.on('wait',function(data){
