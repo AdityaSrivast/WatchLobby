@@ -81,39 +81,43 @@
         color: #eee;
         text-align: center;
       }
-      .trackbar-container {
+      .slidecontainer {
         display: flex;
         justify-content: center;
-
+        /*width: 50%;*/
       }
 
       .slider {
-          -webkit-appearance: none;
-          width: 50%;
-          height: 25px;
-          /*background: #000;*/
-          /*color: #000;*/
-          /*background-color: #000;*/
-          outline: none;
-          opacity: 0.7;
-          -webkit-transition: .2s;
-          transition: opacity .2s;
+        -webkit-appearance: none;
+        width: 640px;
+        height: 3px;
+        background: #d3d3d3;
+        color: #000;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
       }
 
       .slider:hover {
-          opacity: 1;
+        opacity: 1;
       }
 
       .slider::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          background: #000;
-          cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
+        width: 10px;
+        height: 10px;
+        color: #000;
+        background: rgb(255,20,20);
+        cursor: pointer;
       }
 
       .slider::-moz-range-thumb {
-          background: #ff0000;
-          cursor: pointer;
+        width: 15px;
+        height: 15px;
+        background: rgb(255,20,20);
+        cursor: pointer;
       }
     </style>
 </head>
@@ -128,8 +132,8 @@
   <div id="player-container">
     <div id="player"></div>
   </div><br>
-  <div class="trackbar-container">
-    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+  <div class="slidecontainer">
+    <input type="range" min="1" max="100" value="0" class="slider" id="myRange">
   </div>
   <form id='time'>
       <input type="text" placeholder="Enter Time" id="timenew">
