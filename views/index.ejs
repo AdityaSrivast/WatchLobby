@@ -133,22 +133,18 @@
     <div id="player"></div>
   </div><br>
   <div class="slidecontainer">
-    <input type="range" min="1" max="100" value="0" class="slider" id="myRange">
+    <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
   </div>
-  <form id='time'>
-      <input type="text" placeholder="Enter Time" id="timenew">
-      <button type="submit" id="btn-time">Go</button>
-  </form>
+  <br>
   <div id="btn-container">
     <button id="play">Play</button>
     <button id="pause">Pause</button>
     <button id="mute">Mute</button>
     <button id="sync">Sync</button>
-  </div>
-  <div id="dt"></div>
+</div>
 <script>
     var tag = document.createElement('script');
-    const socket = io('https://obscure-lake-76319.herokuapp.com//');
+    const socket = io('https://sheltered-gorge-14020.herokuapp.com/');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -158,7 +154,7 @@
             height: '390',
             width: '640',
             playerVars:{
-            //     'controls':0,
+                'controls':0,
                 'autoplay':0
             },
             videoId: 'M7lc1UVf-VE',
@@ -174,30 +170,17 @@
             id:socket.io.engine.id
         })
     });
-    document.getElementById('time').addEventListener('submit',function(e){
-        e.preventDefault();
-        console.log('REQ SENT');
-        socket.emit('time',{
-            time:document.getElementById('timenew').value,
-            id:socket.io.engine.id
-        });
-    });
     socket.on('newvideo2',function(data){
         console.log('Changing')
         player.loadVideoById({videoId:data.video});
     });
-    socket.on('time',function(data){
-        console.log('TIME CHANGE')
-        player.seekTo(data.time);
-        player.pauseVideo();
-    })
     var done = false;
     function onPlayerStateChange(event) {
         if(event.data==3){
             
         }
         else if(event.data==1){
-            timer=setInterval(update,100);
+            timer=setInterval(update,500);
         }
         else if(event.data==2){
             clearInterval(timer);
@@ -210,8 +193,28 @@
     function update(){
         nt=player.getCurrentTime();
         tot=player.getDuration();
-        document.getElementById('dt').innerHTML=nt/tot*100;
+        if(nt/tot!=NaN){
+            document.getElementById('myRange').value=nt/tot*100;
+        }
+        else{
+            document.getElementById('myRange').value=0;
+        }
     }
+    document.getElementById('myRange').addEventListener('mousedown',function(){
+        clearInterval(timer);
+    });
+    document.getElementById('myRange').addEventListener('mouseup',function(){
+        socket.emit('time',{
+            time:document.getElementById('myRange').value*player.getDuration()/100,
+            id:socket.io.engine.id
+        });
+        timer=setInterval(update,500);    
+    });
+    socket.on('time',function(data){
+        console.log('TIME CHANGE')
+        player.seekTo(data.time);
+        player.pauseVideo();
+    })
     document.getElementById('play').addEventListener('click',function(){
         socket.emit('change',{
             type:1,
@@ -227,8 +230,10 @@
     socket.on('mute',function(data){
         if(player.isMuted()){
             player.unMute();
+            document.getElementById('mute').style.backgroundColor="#333";
         } else{
             player.mute();
+            document.getElementById('mute').style.backgroundColor="#991f00";
         }
     })
     document.getElementById('pause').addEventListener('click',function(){
@@ -248,9 +253,13 @@
         if(data.type===1){
             player.seekTo(data.pos);
             player.playVideo();
+            document.getElementById('pause').style.backgroundColor="#333";
+            document.getElementById('play').style.backgroundColor="#991f00";
         } else if(data.type==2){
             player.seekTo(data.pos);
             player.pauseVideo();     
+            document.getElementById('play').style.backgroundColor="#333";
+            document.getElementById('pause').style.backgroundColor="#991f00";
         } else if(data.type===3){
              
         }
