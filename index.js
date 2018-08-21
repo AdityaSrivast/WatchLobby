@@ -38,7 +38,7 @@ io.on('connection',function(client){
         console.log(host)
         if(data.id==host[0]){
             console.log(1);
-            io.emit('newvideo2',data);    
+            io.emit('newvideo2',data);
         }
         else{
             client.emit('errormessage',data)
@@ -50,13 +50,13 @@ io.on('connection',function(client){
     client.on('sync',function(data){
         console.log(data)
         io.emit('sync',data)
-    }) 
+    })
     client.on('mute',function(data){
         io.emit('mute',data)
-    })       
+    })
     client.on('disconnect', function(){
         host.splice(host.indexOf(client.id),1);
-        console.log('DICONNECTED')
+        console.log('DISCONNECTED')
     });
 })
 var port=process.env.PORT || 3000;
