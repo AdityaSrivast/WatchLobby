@@ -193,10 +193,10 @@
             document.getElementById('myRange').value=0;
         }
     }
-    document.getElementById('myRange').addEventListener('mousedown',function(){
+    document.getElementById('myRange').addEventListener('mousedown ontouchstart',function(){
         clearInterval(timer);
     });
-    document.getElementById('myRange').addEventListener('mouseup',function(){
+    document.getElementById('myRange').addEventListener('mouseup ontouchend',function(){
         socket.emit('time',{
             time:document.getElementById('myRange').value*player.getDuration()/100,
             id:socket.io.engine.id
