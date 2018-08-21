@@ -176,31 +176,41 @@
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    var player;
     function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            playerVars:{
-                'controls':0,
-                'autoplay':0
-            },
-            videoId: 'M7lc1UVf-VE',
-            events: {
-                'onStateChange': onPlayerStateChange
-            }
-        });
+
     }
+    var player;
+    var curVid;
+
     document.getElementById('form').addEventListener('submit',function(e){
         e.preventDefault();
-        socket.emit('newvideo',{
-            video:document.getElementById('video').value,
-            id:socket.io.engine.id
-        })
+        if(player==undefined){
+            player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                playerVars:{
+                    'controls':0,
+                    'autoplay':0
+                },
+                videoId: document.getElementById('video').value,
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+            curVid=document.getElementById('video').value;
+        }
+        else{
+            console.log(20000000);
+            socket.emit('newvideo',{
+                video:document.getElementById('video').value,
+                id:socket.io.engine.id
+            });
+        }
     });
     socket.on('newvideo2',function(data){
         console.log('Changing')
         player.loadVideoById({videoId:data.video});
+        curVid=data.video;
     });
     var done = false;
     function onPlayerStateChange(event) {
@@ -211,6 +221,8 @@
             timer=setInterval(update,500);
         }
         else if(event.data==2){
+            document.getElementById('play').style.backgroundColor="#333";
+        document.getElementById('pause').style.backgroundColor="#991f00";
             clearInterval(timer);
         }
         if (event.data == YT.PlayerState.PLAYING && !done) {
@@ -238,10 +250,32 @@
         });
         timer=setInterval(update,500);
     });
+    document.getElementById('myRange').addEventListener('touchstart',function(){
+        clearInterval(timer);
+    });
+    document.getElementById('myRange').addEventListener('touchend',function(){
+        socket.emit('time',{
+            time:document.getElementById('myRange').value*player.getDuration()/100,
+            id:socket.io.engine.id
+        });
+        timer=setInterval(update,500);
+    });
+    document.getElementById('myRange').addEventListener('dragstart',function(){
+        clearInterval(timer);
+    });
+    document.getElementById('myRange').addEventListener('dragend',function(){
+        socket.emit('time',{
+            time:document.getElementById('myRange').value*player.getDuration()/100,
+            id:socket.io.engine.id
+        });
+        timer=setInterval(update,500);
+    });
     socket.on('time',function(data){
         console.log('TIME CHANGE')
         player.seekTo(data.time);
         player.pauseVideo();
+        document.getElementById('play').style.backgroundColor="#333";
+        document.getElementById('pause').style.backgroundColor="#991f00";
     })
     document.getElementById('play').addEventListener('click',function(){
         socket.emit('change',{
@@ -284,7 +318,7 @@
             document.getElementById('pause').style.backgroundColor="#333";
             document.getElementById('play').style.backgroundColor="#991f00";
         } else if(data.type==2){
-            player.seekTo(data.pos);
+            clearInterval(timer);
             player.pauseVideo();
             document.getElementById('play').style.backgroundColor="#333";
             document.getElementById('pause').style.backgroundColor="#991f00";
@@ -302,10 +336,15 @@
                 pos:player.getCurrentTime(),
                 state:player.getPlayerState(),
                 id:socket.io.engine.id,
+                video:curVid
             });
     });
     socket.on('sync',function(data){
         console.log(data)
+        if(curVid!=data.video){
+            player.loadVideoById(data.video);
+            curVid=data.video;
+        }
         player.seekTo(data.pos);
         if(data.state==1){
             player.playVideo();
