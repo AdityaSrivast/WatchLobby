@@ -215,6 +215,8 @@
             timer=setInterval(update,500);
         }
         else if(event.data==2){
+            document.getElementById('play').style.backgroundColor="#333";
+        document.getElementById('pause').style.backgroundColor="#991f00";
             clearInterval(timer);
         }
         if (event.data == YT.PlayerState.PLAYING && !done) {
@@ -236,6 +238,26 @@
         clearInterval(timer);
     });
     document.getElementById('myRange').addEventListener('mouseup',function(){
+        socket.emit('time',{
+            time:document.getElementById('myRange').value*player.getDuration()/100,
+            id:socket.io.engine.id
+        });
+        timer=setInterval(update,500);
+    });
+    document.getElementById('myRange').addEventListener('touchstart',function(){
+        clearInterval(timer);
+    });
+    document.getElementById('myRange').addEventListener('touchend',function(){
+        socket.emit('time',{
+            time:document.getElementById('myRange').value*player.getDuration()/100,
+            id:socket.io.engine.id
+        });
+        timer=setInterval(update,500);
+    });
+    document.getElementById('myRange').addEventListener('dragstart',function(){
+        clearInterval(timer);
+    });
+    document.getElementById('myRange').addEventListener('dragend',function(){
         socket.emit('time',{
             time:document.getElementById('myRange').value*player.getDuration()/100,
             id:socket.io.engine.id
