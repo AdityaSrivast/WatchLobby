@@ -1,3 +1,3 @@
 # youtube-synchro
 synchronise youtube video in multiple browser windows
-Demo at https://sheltered-gorge-14020.herokuapp.com/
+Demo at https://rocky-harbor-29103.herokuapp.com/

@@ -137,7 +137,7 @@
 </div>
 <script>
     var tag = document.createElement('script');
-    const socket = io('https://rocky-harbor-29103.herokuapp.com/');
+    const socket = io('http://localhost:3000/');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -199,9 +199,14 @@
         }
     }
     document.getElementById('myRange').addEventListener('mousedown ontouchstart',function(){
+        console.log('Stopped')
         clearInterval(timer);
     });
+    document.getElementById('myRange').addEventListener('onchange',function(){
+       console.log(1); 
+    });
     document.getElementById('myRange').addEventListener('mouseup ontouchend',function(){
+        console.log('Started')
         socket.emit('time',{
             time:document.getElementById('myRange').value*player.getDuration()/100,
             id:socket.io.engine.id
