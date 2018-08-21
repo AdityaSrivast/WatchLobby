@@ -6,6 +6,7 @@
     <title>Youtube Synchro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style type="text/css">
       body {
         background-image: url("bgAsset 1.svg");
@@ -53,7 +54,7 @@
       #btn-vid:hover,#btn-time:hover{
         background-color: rgb(255,20,20);
         border: 2px solid rgb(255,20,20);
-        cursor: pointer; 
+        cursor: pointer;
       }
       #form {
         display: flex;
@@ -65,9 +66,9 @@
         justify-content: center;
         margin: 20px;
       }
-      #nav-bar{
+      #nav-bar {
         /*background: #333333;   fallback for old browsers */
-        /*background: -webkit-linear-gradient(to left, #dd1818, #333333);  /* Chrome 10-25, Safari 5.1-6 */
+        /*background: -webkit-linear-gradient(to left, #dd1818, #333333);  /* Chrome 10-25, Safari 5.1-6 */*/
         /*background: linear-gradient(to left, #dd1818, #333333);  W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+  */
         padding: 1rem;
       }
@@ -112,29 +113,58 @@
         background: rgb(255,20,20);
         cursor: pointer;
       }
+
+      .hide-initially{
+        display: none;
+      }
+
+      .center-initial-nav{
+        position:fixed;
+        top: 50%;
+        left: 50%;
+        width:30em;
+        height:18em;
+        margin-top: -9em; /*set to a negative number 1/2 of your height*/
+        margin-left: -15em; /*set to a negative number 1/2 of your width*/
+      }
     </style>
 </head>
 <body>
-  <nav id="nav-bar">
+
+  <nav id="nav-bar" class="center-initial-nav">
     <h4 style="color: #fff;text-align: center;">YouTube Synchro</h4>
     <form id='form'>
       <input placeholder="Enter Video Id" id="video">
-      <button type="submit" id="btn-vid">Search</button>
+      <button type="submit" id="btn-vid" onclick="myFunction1()">Search</button>
     </form>
   </nav>
-  <div id="player-container">
-    <div id="player"></div>
-  </div><br>
-  <div class="slidecontainer">
-    <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
+
+  <div class="hide-initially">
+    <div id="player-container">
+      <div id="player"></div>
+    </div><br>
+    <div class="slidecontainer">
+      <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
+    </div>
+    <br>
+    <div id="btn-container">
+      <button id="play">Play</button>
+      <button id="pause">Pause</button>
+      <button id="mute">Mute</button>
+      <button id="sync">Sync</button>
+    </div>
   </div>
-  <br>
-  <div id="btn-container">
-    <button id="play">Play</button>
-    <button id="pause">Pause</button>
-    <button id="mute">Mute</button>
-    <button id="sync">Sync</button>
-</div>
+
+  <script>
+  $(document).ready(function(){
+      $("#btn-vid").click(function(){
+           $("#nav-bar").removeClass("center-initial-nav");
+           $(".hide-initially").css("display", "block");
+
+      });
+  });
+  </script>
+
 <script>
     var tag = document.createElement('script');
     const socket = io('http://localhost:3000/');
@@ -170,18 +200,12 @@
     var done = false;
     function onPlayerStateChange(event) {
         if(event.data==3){
-            
+
         }
         else if(event.data==1){
             timer=setInterval(update,500);
-            
         }
         else if(event.data==2){
-            socket.emit('change',{
-                type:2,
-                pos:player.getCurrentTime(),  
-                id:socket.io.engine.id
-            })
             clearInterval(timer);
         }
         if (event.data == YT.PlayerState.PLAYING && !done) {
@@ -200,28 +224,14 @@
         }
     }
     document.getElementById('myRange').addEventListener('mousedown',function(){
-        console.log('Stopped')
-        clearInterval(timer);
-    });
-    document.getElementById('myRange').addEventListener('touchstart',function(){
-        console.log('Stopped')
         clearInterval(timer);
     });
     document.getElementById('myRange').addEventListener('mouseup',function(){
-        console.log('Started')
         socket.emit('time',{
             time:document.getElementById('myRange').value*player.getDuration()/100,
             id:socket.io.engine.id
         });
-        timer=setInterval(update,500);    
-    });
-    document.getElementById('myRange').addEventListener('touchend',function(){
-        console.log('Started')
-        socket.emit('time',{
-            time:document.getElementById('myRange').value*player.getDuration()/100,
-            id:socket.io.engine.id
-        });
-        timer=setInterval(update,500);    
+        timer=setInterval(update,500);
     });
     socket.on('time',function(data){
         console.log('TIME CHANGE')
@@ -231,7 +241,7 @@
     document.getElementById('play').addEventListener('click',function(){
         socket.emit('change',{
             type:1,
-            pos:player.getCurrentTime(),  
+            pos:player.getCurrentTime(),
             id:socket.io.engine.id
         })
     })
@@ -252,7 +262,7 @@
     document.getElementById('pause').addEventListener('click',function(){
         socket.emit('change',{
             type:2,
-            pos:player.getCurrentTime(),  
+            pos:player.getCurrentTime(),
             id:socket.io.engine.id
         })
     })
@@ -270,11 +280,11 @@
             document.getElementById('play').style.backgroundColor="#991f00";
         } else if(data.type==2){
             player.seekTo(data.pos);
-            player.pauseVideo();     
+            player.pauseVideo();
             document.getElementById('play').style.backgroundColor="#333";
             document.getElementById('pause').style.backgroundColor="#991f00";
         } else if(data.type===3){
-             
+
         }
     })
     socket.on('errormessage',function(data){
@@ -296,7 +306,7 @@
             player.playVideo();
         } else if(data.state==2){
             player.pauseVideo();
-        }  
+        }
     });
     function stopVideo() {
         player.stopVideo();
