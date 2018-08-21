@@ -158,9 +158,14 @@
   <script>
   $(document).ready(function(){
       $("#btn-vid").click(function(){
-           $("#nav-bar").removeClass("center-initial-nav");
-           $(".hide-initially").css("display", "block");
 
+           // $("#nav-bar").animate({height: "300px"});
+           $("#nav-bar").animate({
+              top: "-=205"
+            }, 1200, function() {
+              $("#nav-bar").removeClass("center-initial-nav");
+              $(".hide-initially").css("display", "block");
+            });
       });
   });
   </script>
