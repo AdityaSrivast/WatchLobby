@@ -176,6 +176,11 @@
             timer=setInterval(update,500);
         }
         else if(event.data==2){
+            socket.emit('change',{
+                type:2,
+                pos:player.getCurrentTime(),  
+                id:socket.io.engine.id
+            })
             clearInterval(timer);
         }
         if (event.data == YT.PlayerState.PLAYING && !done) {
