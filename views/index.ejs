@@ -6,166 +6,11 @@
     <title>Watch Lobby</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style type="text/css">
-      html,body {
-        height: 100%;
-        background-image: url("bg.jpg");
-        font-family: 'Roboto', sans-serif;
-        background-attachment: fixed;
-       }
-      #player-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 30px;
-      }
-      #player{
-        /*margin-top: 20px;*/
-        /*border: 1px solid rgb(255,20,20);*/
-      }
-      #btn-container{
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      #play,#pause,#sync,#mute {
-        padding: 1rem;
-        border: 1px solid #999;
-        color: #fff;
-        margin: 10px;
-        background-color: #fff;
-        background-attachment: fixed;
-      }
-      #play:hover,#pause:hover,#sync:hover,#mute:hover{
-        background-color: rgb(255,20,20);
-        border: 1px solid rgb(255,20,20);
-        cursor: pointer;
-      }
-      #play:focus,#pause:focus,#sync:focus,#mute:focus {
-        background-color: rgb(255,20,20);
-        border: 1px solid rgb(255,20,20);
-        cursor: pointer;
-      }
-      #video{
-        padding: 1rem;
-        width: 40rem;
-        border: 1px solid #999;
-        /*border: 1px solid #555;*/
-        /*background-color: #000;*/
-        /*color: #fff;*/
-      }
-      #btn-vid{
-        padding: 1rem;
-        width: 6rem;
-        color: #fff;
-        border: 1px solid #999;
-        background-color: #ededed;
-        /*border: 2px solid #333;*/
-        /*background-color: #333;*/
-        /*color: #fff;*/
-      }
-      #btn-vid:hover,#btn-time:hover{
-        background-color: rgb(255,20,20);
-        border: 2px solid rgb(255,20,20);
-        cursor: pointer;
-      }
-      #form {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: center;
-      }
-      #time{
-        display: flex;
-        justify-content: center;
-        margin: 20px;
-      }
-      #nav-bar {
-        /*background: #333333;   fallback for old browsers */
-        /*background: -webkit-linear-gradient(to left, #dd1818, #333333);  /* Chrome 10-25, Safari 5.1-6 */*/
-        /*background: linear-gradient(to left, #dd1818, #333333);  W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+  */
-        padding: 1rem;
-      }
-      h4{
-        color: #eee;
-        text-align: center;
-      }
-      .slidecontainer {
-        display: flex;
-        justify-content: center;
-        /*width: 50%;*/
-      }
 
-      .slider {
-        -webkit-appearance: none;
-        width: 640px;
-        height: 3px;
-        background: #d3d3d3;
-        color: #000;
-        outline: none;
-        opacity: 0.7;
-        -webkit-transition: .2s;
-        transition: opacity .2s;
-      }
-
-      .slider:hover {
-        opacity: 1;
-      }
-
-      .slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 10px;
-        height: 10px;
-        color: #000;
-        background: rgb(255,20,20);
-        cursor: pointer;
-      }
-      .slider::-moz-range-thumb {
-        width: 15px;
-        height: 15px;
-        background: rgb(255,20,20);
-        cursor: pointer;
-      }
-
-      .hide-initially{
-        display: none;
-        transition-delay: 2s;
-      }
-      .no-hide {
-        display: block;
-
-        /*transition: */
-      }
-
-      .center-initial-nav{
-        
-        /*flex-wrap: nowrap;*/
-        /*vertical-align: middle;*/
-        /*position:fixed;
-        top: 50%;
-        left: 50%;
-        width:30em;
-        height:18em;
-        margin-top: -9em; set to a negative number 1/2 of your height
-        margin-left: -15em; /*set to a negative number 1/2 of your width*/
-      }
-      .nav-container {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /*-webkit-transition: linear 1s;
-        transition: linear 1s;*/
-      }
-      .nav-transition {
-        height: 10%;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        margin-top: 10px;
-        }
     </style>
 </head>
 <body>
@@ -263,8 +108,8 @@
             timer=setInterval(update,500);
         }
         else if(event.data==2){
-        //     document.getElementById('play').style.backgroundColor="#333";
-        // document.getElementById('pause').style.backgroundColor="#991f00";
+            document.getElementById('play').style.backgroundColor="#fff";
+            document.getElementById('pause').style.backgroundColor="rgb(255,20,20)";
             clearInterval(timer);
         }
         if (event.data == YT.PlayerState.PLAYING && !done) {
@@ -316,8 +161,8 @@
         console.log('TIME CHANGE')
         player.seekTo(data.time);
         player.pauseVideo();
-        // document.getElementById('play').style.backgroundColor="#333";
-        // document.getElementById('pause').style.backgroundColor="#991f00";
+        document.getElementById('play').style.backgroundColor="#fff";
+        document.getElementById('pause').style.backgroundColor="rgb(255,20,20)";
     })
     document.getElementById('play').addEventListener('click',function(){
         socket.emit('change',{
@@ -334,11 +179,11 @@
     socket.on('mute',function(data){
         if(player.isMuted()){
             player.unMute();
-            document.getElementById('mute').style.backgroundColor=rgb(255,20,20);
+            document.getElementById('mute').style.backgroundColor="#fff";
         } else{
             player.mute();
             // document.getElementById('mute').style.backgroundColor="#991f00";
-            document.getElementById('mute').style.backgroundColor=rgb(255,20,20);
+            document.getElementById('mute').style.backgroundColor="rgb(255,20,20)";
         }
     })
     document.getElementById('pause').addEventListener('click',function(){
@@ -358,13 +203,13 @@
         if(data.type===1){
             player.seekTo(data.pos);
             player.playVideo();
-            // document.getElementById('pause').style.backgroundColor="#333";
-            // document.getElementById('play').style.backgroundColor="#991f00";
+            document.getElementById('pause').style.backgroundColor="#fff";
+            document.getElementById('play').style.backgroundColor="rgb(255,20,20)";
         } else if(data.type==2){
             clearInterval(timer);
             player.pauseVideo();
-            // document.getElementById('play').style.backgroundColor="#333";
-            // document.getElementById('pause').style.backgroundColor="#991f00";
+            document.getElementById('play').style.backgroundColor="#fff";
+            document.getElementById('pause').style.backgroundColor="rgb(255,20,20)";
         } else if(data.type===3){
 
         }
@@ -391,8 +236,12 @@
         player.seekTo(data.pos);
         if(data.state==1){
             player.playVideo();
+            document.getElementById('pause').style.backgroundColor="#fff";
+            document.getElementById('play').style.backgroundColor="rgb(255,20,20)";
         } else if(data.state==2){
             player.pauseVideo();
+            document.getElementById('play').style.backgroundColor="#fff";
+            document.getElementById('pause').style.backgroundColor="rgb(255,20,20)";
         }
     });
     function stopVideo() {
