@@ -1,3 +1,4 @@
-# youtube-synchro
-synchronise youtube video in multiple browser windows
-Demo at https://gentle-earth-52830.herokuapp.com/
+# WatchLobby
+Now watch same youtube video at a time on different PCs, all at sync...
+
+https://watchlobby.herokuapp.com
