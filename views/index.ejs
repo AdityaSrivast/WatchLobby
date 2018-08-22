@@ -5,11 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Watch Lobby</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style type="text/css">
-      body {
+      html,body {
+        height: 100%;
         background-image: url("bg.jpg");
+        font-family: 'Roboto', sans-serif;
        }
       #player-container {
         display: flex;
@@ -26,29 +29,36 @@
         justify-content: center;
         flex-wrap: wrap;
       }
-      #play,#pause,#sync,#mute {
+      #plays,#pauses,#syncs,#mutes {
         padding: 1rem;
-        background-color: #333;
-        border: 1px solid #333;
+        border: 1px solid #999;
         color: #fff;
         margin: 10px;
+        background-color: #fff;
+        background-attachment: fixed;
       }
-      #play:hover,#pause:hover,#sync:hover,#mute:hover{
+      #plays:hover,#pauses:hover,#syncs:hover,#mutes:hover{
         background-color: rgb(255,20,20);
         border: 1px solid rgb(255,20,20);
         cursor: pointer;
       }
-      #video,#timenew{
-        padding: .5rem;
-        border: 1px solid #555;
-        background-color: #000;
-        color: #fff;
+      #video{
+        padding: 1rem;
+        width: 40rem;
+        border: 1px solid #999;
+        /*border: 1px solid #555;*/
+        /*background-color: #000;*/
+        /*color: #fff;*/
       }
-      #btn-vid,#btn-time{
-        padding: 3px;
-        border: 2px solid #333;
-        background-color: #333;
+      #btn-vid{
+        padding: 1rem;
+        width: 6rem;
         color: #fff;
+        border: 1px solid #999;
+        background-color: #ededed;
+        /*border: 2px solid #333;*/
+        /*background-color: #333;*/
+        /*color: #fff;*/
       }
       #btn-vid:hover,#btn-time:hover{
         background-color: rgb(255,20,20);
@@ -115,28 +125,53 @@
 
       .hide-initially{
         display: none;
+        transition-delay: 2s;
+      }
+      .no-hide {
+        display: block;
+
+        /*transition: */
       }
 
       .center-initial-nav{
-        position:fixed;
+        
+        /*flex-wrap: nowrap;*/
+        /*vertical-align: middle;*/
+        /*position:fixed;
         top: 50%;
         left: 50%;
         width:30em;
         height:18em;
-        margin-top: -9em; /*set to a negative number 1/2 of your height*/
+        margin-top: -9em; set to a negative number 1/2 of your height
         margin-left: -15em; /*set to a negative number 1/2 of your width*/
       }
+      .nav-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /*-webkit-transition: linear 1s;
+        transition: linear 1s;*/
+      }
+      .nav-transition {
+        height: 10%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-
+<div class="nav-container" id="navbar-container">
   <nav id="nav-bar" class="center-initial-nav">
-    <h4 style="color: #000;text-align: center;">Watch Lobby</h4>
+    <!-- <h2 style="color: #000;text-align: center;">Watch Lobby</h2> -->
     <form id='form'>
       <input placeholder="Enter Video Id" id="video">
-      <button type="submit" id="btn-vid" onclick="myFunction1()">Search</button>
+      <button type="submit" id="btn-vid" onclick="myFunction1()"><img src="search.svg" alt="Search"></button>
     </form>
   </nav>
+</div>
 
   <div class="hide-initially">
     <div id="player-container">
@@ -147,10 +182,10 @@
     </div>
     <br>
     <div id="btn-container">
-      <button id="play">Play</button>
-      <button id="pause">Pause</button>
-      <button id="mute">Mute</button>
-      <button id="sync">Sync</button>
+      <button id="plays"><img src="play.svg" alt="Play"></button>
+      <button id="pauses"><img src="pause.svg" alt="Pause"></button>
+      <button id="mutes"><img src="mute.svg" alt="Mute"></button>
+      <button id="syncs"><img src="sync.svg" alt="Sync"></button>
     </div>
   </div>
 
@@ -160,10 +195,12 @@
 
            // $("#nav-bar").animate({height: "300px"});
            $("#nav-bar").animate({
-              top: "-=205"
+              
             }, 1200, function() {
-              $("#nav-bar").removeClass("center-initial-nav");
-              $(".hide-initially").css("display", "block");
+              // $("#navbar-container").removeClass("nav-container").addClass("nav-transition");
+              $("#navbar-container").addClass("nav-transition");
+              // $(".hide-initially").css("display", "block");
+              $(".hide-initially").addClass("no-hide");
             });
       });
   });
