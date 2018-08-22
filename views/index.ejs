@@ -29,7 +29,7 @@
         justify-content: center;
         flex-wrap: wrap;
       }
-      #plays,#pauses,#syncs,#mutes {
+      #play,#pause,#sync,#mute {
         padding: 1rem;
         border: 1px solid #999;
         color: #fff;
@@ -37,7 +37,12 @@
         background-color: #fff;
         background-attachment: fixed;
       }
-      #plays:hover,#pauses:hover,#syncs:hover,#mutes:hover{
+      #play:hover,#pause:hover,#sync:hover,#mute:hover{
+        background-color: rgb(255,20,20);
+        border: 1px solid rgb(255,20,20);
+        cursor: pointer;
+      }
+      #play:focus,#pause:focus,#sync:focus,#mute:focus {
         background-color: rgb(255,20,20);
         border: 1px solid rgb(255,20,20);
         cursor: pointer;
@@ -182,10 +187,10 @@
     </div>
     <br>
     <div id="btn-container">
-      <button id="plays"><img src="play.svg" alt="Play"></button>
-      <button id="pauses"><img src="pause.svg" alt="Pause"></button>
-      <button id="mutes"><img src="mute.svg" alt="Mute"></button>
-      <button id="syncs"><img src="sync.svg" alt="Sync"></button>
+      <button id="play"><img src="play.svg" alt="Play"></button>
+      <button id="pause"><img src="pause.svg" alt="Pause"></button>
+      <button id="mute"><img src="mute.svg" alt="Mute"></button>
+      <button id="sync"><img src="sync.svg" alt="Sync"></button>
     </div>
   </div>
 
@@ -257,8 +262,8 @@
             timer=setInterval(update,500);
         }
         else if(event.data==2){
-            document.getElementById('play').style.backgroundColor="#333";
-        document.getElementById('pause').style.backgroundColor="#991f00";
+        //     document.getElementById('play').style.backgroundColor="#333";
+        // document.getElementById('pause').style.backgroundColor="#991f00";
             clearInterval(timer);
         }
         if (event.data == YT.PlayerState.PLAYING && !done) {
@@ -310,8 +315,8 @@
         console.log('TIME CHANGE')
         player.seekTo(data.time);
         player.pauseVideo();
-        document.getElementById('play').style.backgroundColor="#333";
-        document.getElementById('pause').style.backgroundColor="#991f00";
+        // document.getElementById('play').style.backgroundColor="#333";
+        // document.getElementById('pause').style.backgroundColor="#991f00";
     })
     document.getElementById('play').addEventListener('click',function(){
         socket.emit('change',{
@@ -328,10 +333,11 @@
     socket.on('mute',function(data){
         if(player.isMuted()){
             player.unMute();
-            document.getElementById('mute').style.backgroundColor="#333";
+            document.getElementById('mute').style.backgroundColor=rgb(255,20,20);
         } else{
             player.mute();
-            document.getElementById('mute').style.backgroundColor="#991f00";
+            // document.getElementById('mute').style.backgroundColor="#991f00";
+            document.getElementById('mute').style.backgroundColor=rgb(255,20,20);
         }
     })
     document.getElementById('pause').addEventListener('click',function(){
@@ -351,13 +357,13 @@
         if(data.type===1){
             player.seekTo(data.pos);
             player.playVideo();
-            document.getElementById('pause').style.backgroundColor="#333";
-            document.getElementById('play').style.backgroundColor="#991f00";
+            // document.getElementById('pause').style.backgroundColor="#333";
+            // document.getElementById('play').style.backgroundColor="#991f00";
         } else if(data.type==2){
             clearInterval(timer);
             player.pauseVideo();
-            document.getElementById('play').style.backgroundColor="#333";
-            document.getElementById('pause').style.backgroundColor="#991f00";
+            // document.getElementById('play').style.backgroundColor="#333";
+            // document.getElementById('pause').style.backgroundColor="#991f00";
         } else if(data.type===3){
 
         }
